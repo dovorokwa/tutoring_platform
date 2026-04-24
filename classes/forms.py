@@ -28,3 +28,12 @@ class StudentRegistrationForm(forms.ModelForm):
                 'placeholder': 'Enter your email address'
             }),
         }
+
+    # --- THIS PART IS THE KEY TO FIXING YOUR LOGIN ISSUE ---
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # set_password hashes the password so Django can recognize it during login
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user

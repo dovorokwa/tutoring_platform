@@ -6,7 +6,7 @@ class Subject(models.Model):
         ('MATH', 'Mathematics'), 
         ('PHYS', 'Physical Science')
     ]
-    
+   
     # Using choices for grade to make the Admin dropdown cleaner
     GRADE_CHOICES = [(i, f'Grade {i}') for i in range(8, 13)]
     
