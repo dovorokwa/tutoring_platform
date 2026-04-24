@@ -3,129 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Payment | MyTutor CAPS</title>
+    <title>Secure Checkout | MyTutor CAPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+<body class="bg-slate-50 min-h-screen font-[Inter] p-6 flex items-center justify-center">
 
-    <div class="max-w-4xl w-full grid md:grid-cols-2 bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100">
+    <div class="max-w-xl w-full bg-white rounded-[3rem] shadow-2xl shadow-blue-900/10 border border-white overflow-hidden">
         
-        <div class="p-8 md:p-12 bg-blue-900 text-white">
-            <div class="mb-8">
-                <div class="text-xl font-black tracking-tighter mb-2 text-white">MyTutor<span class="text-blue-400">CAPS</span></div>
-                <h2 class="text-2xl font-bold">Enrollment Summary</h2>
-                <p class="text-blue-300 text-sm">Review your selected subjects before paying.</p>
-            </div>
-
-            <div class="space-y-4 mb-12">
-                {% for subject in subjects %}
-                <div class="flex justify-between items-center py-3 border-b border-white/10">
-                    <div>
-                        <div class="font-bold">{{ subject.get_name_display }}</div>
-                        <div class="text-xs text-blue-300">Grade {{ subject.grade }} • Live Sessions</div>
-                    </div>
-                    <div class="font-semibold text-blue-200 text-sm">R380.00</div>
-                </div>
-                {% empty %}
-                <p class="text-blue-300 italic">No subjects selected. Please contact the administrator.</p>
-                {% endfor %}
-            </div>
-
-            <div class="bg-white/5 p-6 rounded-2xl">
-                <div class="flex justify-between items-center text-sm mb-2 text-blue-200">
-                    <span>Monthly Subscription</span>
-                    <span>R{{ price }}.00</span>
-                </div>
-                <div class="flex justify-between items-center text-xl font-extrabold border-t border-white/10 pt-4">
-                    <span>Total Due</span>
-                    <span class="text-yellow-400">R{{ price }}.00</span>
-                </div>
-                {% if price == 700 %}
-                <div class="mt-2 text-xs bg-green-500/20 text-green-300 py-1 px-3 rounded-full inline-block font-bold">
-                    Combo Discount Applied (-R60)
-                </div>
-                {% endif %}
-            </div>
+        <div class="bg-blue-900 p-8 text-center text-white">
+            {% if is_returning %}
+                <div class="inline-block px-4 py-1 bg-blue-500 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">Welcome Back</div>
+            {% endif %}
+            <h2 class="text-2xl font-black tracking-tight uppercase italic">Finalize Enrollment</h2>
+            <p class="text-blue-200 text-sm mt-1 opacity-80">2026 Academic Support Program</p>
         </div>
 
-        <div class="p-8 md:p-12 flex flex-col justify-center">
-            
-            {% if is_returning %}
-            <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 text-blue-900 rounded-r-xl text-sm animate-pulse">
-                <p class="font-bold">Welcome back, {{ user.username }}!</p>
-                <p class="text-blue-700">Complete your payment below to unlock your classes instantly.</p>
-            </div>
-            {% endif %}
-
-            <div class="mb-10">
-                <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-2xl mb-4 text-blue-900">🛡️</div>
-                <h3 class="text-2xl font-bold text-gray-900">Secure Checkout</h3>
-                <p class="text-gray-500 text-sm mt-2 leading-relaxed">
-                    Payment processed securely by **Paystack**. Your connection is encrypted and card details are never stored.
-                </p>
-            </div>
-
-            <div class="space-y-6">
-                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Paystack_Logo.png" alt="Paystack" class="h-5">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest border-l pl-4 border-gray-200">Official Partner</span>
-                </div>
-
-                <button onclick="payWithPaystack()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition shadow-xl shadow-blue-600/20 transform hover:-translate-y-1 flex items-center justify-center gap-3">
-                    <span>Pay R{{ price }}.00 Now</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-
-                <div class="flex items-center justify-center gap-6 text-[10px] text-gray-400 uppercase tracking-[0.2em] font-black">
-                    <span>Visa</span>
-                    <span>Mastercard</span>
-                    <span>EFT</span>
+        <div class="p-8 md:p-12">
+            <div class="mb-8">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 italic">Subscription Summary</p>
+                <div class="space-y-3">
+                    {% for subject in subjects %}
+                    <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">📚</span>
+                            <div>
+                                <span class="font-bold text-gray-800 block leading-none">{{ subject.get_name_display }}</span>
+                                <span class="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Grade {{ subject.grade }}</span>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-black text-gray-400 uppercase">Live + WhatsApp</span>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
-            <div class="mt-12 text-center">
-                <p class="text-[10px] text-gray-400 leading-loose uppercase tracking-tighter">
-                    By clicking pay, you agree to the <a href="#" class="underline hover:text-blue-600">Terms of Service</a>.
-                </p>
-                <form action="{% url 'logout' %}" method="post" class="mt-4">
-                    {% csrf_token %}
-                    <button type="submit" class="text-[11px] font-bold text-gray-400 hover:text-red-500 transition border-b border-dotted border-gray-300">
-                        Not you? Log out and switch accounts
-                    </button>
-                </form>
+            <div class="bg-blue-50 rounded-[2.5rem] p-8 mb-10 border border-blue-100 text-center relative overflow-hidden">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-blue-900 text-white px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider shadow-lg">
+                        {{ session_text }}
+                    </span>
+                </div>
+
+                <p class="text-blue-900/60 uppercase font-black text-[10px] tracking-[0.2em] mb-3 italic">Monthly Subscription Fee</p>
+                
+                <div class="flex items-center justify-center gap-4">
+                    <span class="text-2xl text-gray-400 line-through font-bold">
+                        R{{ original_price }}
+                    </span>
+                    
+                    <span class="text-6xl font-black text-blue-900 tracking-tighter">
+                        R{{ price }}
+                    </span>
+                </div>
+                
+                <div class="mt-5 inline-flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-widest animate-pulse">
+                    ✨ SAVE R{{ savings }} TODAY
+                </div>
+            </div>
+
+            <button onclick="payWithPaystack()" class="w-full bg-blue-900 text-white py-5 rounded-[2rem] font-black text-xl hover:bg-blue-800 transition-all shadow-xl shadow-blue-900/20 transform active:scale-[0.98] flex items-center justify-center gap-3 group">
+                <span>Secure Checkout</span>
+                <span class="text-blue-400 group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+
+            <div class="mt-8 flex items-center justify-center gap-8 opacity-30 grayscale">
+                <div class="text-[9px] font-bold uppercase tracking-widest">SSL Encrypted</div>
+                <div class="text-[9px] font-bold uppercase tracking-widest">Paystack Secure</div>
             </div>
         </div>
     </div>
 
-    <script src="https://js.paystack.co/v1/inline.js"></script> 
     <script>
-      function payWithPaystack() {
-        const publicKey = "{{ PAYSTACK_PUBLIC_KEY }}";
-        const userEmail = "{{ user.email }}";
-        const totalAmount = {{ price }} * 100;
-
-        let handler = PaystackPop.setup({
-          key: publicKey,
-          email: userEmail,
-          amount: totalAmount,
-          currency: 'ZAR',
-          
-          callback: function(response) {
-            window.location.href = "{% url 'payment_success' %}?ref=" + response.reference;
-          },
-          onClose: function() {
-            console.log('Transaction window closed.');
-          }
-        });
-        
-        handler.openIframe();
-      }
+        function payWithPaystack() {
+            let handler = PaystackPop.setup({
+                key: '{{ PAYSTACK_PUBLIC_KEY }}', 
+                email: '{{ user.email }}',
+                amount: {{ price }} * 100, // Cents for Paystack
+                currency: 'ZAR',
+                ref: 'MT-{{ user.id }}-' + Math.floor((Math.random() * 1000000) + 1),
+                callback: function(response) {
+                    window.location.href = "{% url 'payment_success' %}?ref=" + response.reference;
+                },
+                onClose: function() {
+                    alert('Payment cancelled. Your account will remain locked until the subscription fee is paid.');
+                }
+            });
+            handler.openIframe();
+        }
     </script>
+
 </body>
 </html>

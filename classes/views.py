@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.utils import timezone
 from .models import Subject, StudentProfile
 from .forms import StudentRegistrationForm
 
@@ -10,19 +11,29 @@ def landing(request):
     return render(request, 'classes/landing.html')
 
 def register(request):
-    """Handles new student sign-ups and subject selection."""
+    """Handles signup and matches generic checkboxes to the specific grade instances."""
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Create profile and attach subjects
             profile = StudentProfile.objects.create(user=user)
-            selected_subjects = form.cleaned_data.get('subjects')
-            profile.enrolled_subjects.set(selected_subjects)
+            
+            selected_grade = form.cleaned_data.get('grade')
+            selected_subjects_from_form = form.cleaned_data.get('subjects') 
+
+            # Map generic names (like 'MATH') to the correct Grade record
+            subject_names = [s.name for s in selected_subjects_from_form]
+            
+            # Filter subjects that match the Grade and names
+            final_subjects = Subject.objects.filter(
+                name__in=subject_names, 
+                grade=selected_grade
+            )
+            
+            profile.enrolled_subjects.set(final_subjects)
             profile.save()
             
             login(request, user)
-            # Pass a flag so the dashboard knows NOT to say "Welcome Back" yet
             return redirect('dashboard')
     else:
         form = StudentRegistrationForm()
@@ -31,47 +42,58 @@ def register(request):
 @login_required
 def dashboard(request):
     """
-    The gatekeeper view. 
-    If unpaid: redirects to payment summary.
-    If paid: shows MS Teams links.
+    Handles the Paywall with specific session logic:
+    1 Unique Subject: R500 (was R600) - 8 Sessions
+    2 Unique Subjects: R800 (was R1200) - 16 Sessions
     """
-    profile, created = StudentProfile.objects.get_or_create(user=request.user)
+    try:
+        profile = request.user.profile
+    except StudentProfile.DoesNotExist:
+        logout(request)
+        return redirect('register')
     
     if not profile.has_paid:
         subjects = profile.enrolled_subjects.all()
         
-        # If a student has no subjects, they shouldn't be here
         if not subjects.exists():
-            return render(request, 'classes/payment.html', {
-                'error': 'No subjects selected. Please contact support.',
-                'price': 0
-            })
+            return redirect('register')
 
-        # Logic for R380 vs R700
-        count = subjects.count()
-        price = 700 if count >= 2 else 380
+        # FIX: Count unique subject types, not the number of database objects
+        # This ensures one subject (e.g. MATH) is always R500 regardless of session count
+        unique_count = subjects.values('name').distinct().count()
         
-        # Logic to determine if we show the "Welcome Back" alert
-        # We show it if they have been registered for more than 1 minute 
-        # (meaning they didn't JUST come from the register page)
-        from django.utils import timezone
+        if unique_count >= 2:
+            price = 800
+            original_price = 1200
+            session_text = "16 Sessions Per Month"
+        else:
+            price = 500
+            original_price = 600
+            session_text = "8 Sessions Per Month"
+        
+        savings = original_price - price
+
+        # Flag for returning users
         is_returning = (timezone.now() - request.user.date_joined).total_seconds() > 60
 
         return render(request, 'classes/payment.html', {
             'price': price,
+            'original_price': original_price,
+            'savings': savings,
+            'session_text': session_text,
             'subjects': subjects,
             'PAYSTACK_PUBLIC_KEY': settings.PAYSTACK_PUBLIC_KEY,
             'is_returning': is_returning  
         })
     
-    # SUCCESS: User has paid, show the actual class links
+    # SUCCESS: User has paid, show MS Teams links and schedule
     return render(request, 'classes/dashboard.html', {
         'subjects': profile.enrolled_subjects.all()
     })
 
 @login_required
 def payment_success(request):
-    """Unlocks account and saves Paystack reference."""
+    """Verifies payment and unlocks the dashboard."""
     profile = StudentProfile.objects.get(user=request.user)
     
     ref = request.GET.get('ref')
