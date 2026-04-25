@@ -18,18 +18,27 @@
 <body class="bg-white text-gray-900">
 
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-            <div class="text-2xl font-extrabold text-blue-900 tracking-tighter">MyTutor<span class="text-blue-600">CAPS</span></div>
-            <div class="space-x-6 flex items-center">
-                <a href="{% url 'login' %}" class="font-semibold text-gray-600 hover:text-blue-900 hidden sm:block">Login</a>
-                <a href="{% url 'register' %}" class="bg-blue-900 text-white px-6 py-2.5 rounded-full font-bold hover:bg-blue-800 transition shadow-lg shadow-blue-900/20">Enroll Now</a>
-            </div>
+    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        
+        <a href="/" class="flex items-center">
+            <img src="/static/logo.png" alt="MyTutor CAPS Logo" class="h-10 md:h-12 w-auto object-contain">
+        </a>
+
+        <div class="flex items-center space-x-4 md:space-x-8">
+            <a href="{% url 'login' %}" class="text-sm font-bold text-gray-600 hover:text-blue-900 transition whitespace-nowrap">
+                Sign In
+            </a>
+            <a href="{% url 'register' %}" class="bg-blue-900 text-white px-5 py-2.5 md:px-8 md:py-3 rounded-full text-sm font-black hover:bg-blue-800 transition shadow-lg shadow-blue-900/20 whitespace-nowrap">
+                Enroll Now
+            </a>
         </div>
-    </nav>
+
+    </div>
+</nav>
 
     <section class="px-6 py-20 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
         <div class="max-w-5xl mx-auto text-center relative">
-            <span class="inline-block bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide uppercase mb-6">Enrollment Open for 2026</span>
+            <span class="inline-block bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide uppercase mb-6 text-[10px]">Enrollment Open for 2026</span>
             <h1 class="text-5xl md:text-7xl font-extrabold text-blue-900 leading-tight tracking-tight">
                 Master Maths & Physics <br><span class="gradient-text">The CAPS Way.</span>
             </h1>
@@ -47,121 +56,71 @@
         </div>
     </section>
 
-    <section class="py-20 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+    <section class="py-20 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
         <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm">📖</div>
+            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">📖</div>
             <h3 class="text-xl font-bold text-blue-900">Full CAPS Coverage</h3>
             <p class="text-gray-500 mt-3 leading-relaxed">We strictly follow the South African curriculum requirements to ensure 100% exam readiness.</p>
         </div>
         <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm">🔬</div>
-            <h3 class="text-xl font-bold text-blue-900">Visual Simulations</h3>
-            <p class="text-gray-500 mt-3 leading-relaxed">Complex Physics and Maths concepts are simplified through interactive 3D digital simulations.</p>
+            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">🔬</div>
+            <h3 class="text-xl font-bold text-blue-900">8 Sessions Monthly</h3>
+            <p class="text-gray-500 mt-3 leading-relaxed">Consistent, high-frequency learning with 2 sessions every week per subject to build mastery.</p>
         </div>
         <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm">🎥</div>
+            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">🎥</div>
             <h3 class="text-xl font-bold text-blue-900">Live Interaction</h3>
             <p class="text-gray-500 mt-3 leading-relaxed">Real-time sessions via MS Teams. Not just a video—a live classroom where students ask questions.</p>
-        </div>
-    </section>
-
-    <section class="py-24 bg-gray-50">
-        <div class="max-w-5xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-16 italic">Your 3-Step Success Plan</h2>
-            <div class="grid md:grid-cols-3 gap-8 relative">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
-                    <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mx-auto mb-6 text-xl">1</div>
-                    <h4 class="font-bold text-lg mb-2 text-blue-900">Register & Select</h4>
-                    <p class="text-gray-500 text-sm">Create your student profile and choose Maths, Physics, or the Combo Deal.</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
-                    <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mx-auto mb-6 text-xl">2</div>
-                    <h4 class="font-bold text-lg mb-2 text-blue-900">Secure Payment</h4>
-                    <p class="text-gray-500 text-sm">Pay securely via Paystack to instantly unlock your personalized live class schedule.</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
-                    <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold mx-auto mb-6 text-xl">3</div>
-                    <h4 class="font-bold text-lg mb-2 text-blue-900">Attend & Excel</h4>
-                    <p class="text-gray-500 text-sm">Join the MS Teams meetings and start mastering your curriculum with expert guidance.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row items-end justify-between mb-16">
-                <div class="max-w-xl">
-                    <h2 class="text-4xl font-extrabold text-blue-900 leading-tight">Trusted by Students <br>Across South Africa.</h2>
-                </div>
-                <div class="hidden md:block text-right">
-                    <span class="text-blue-600 font-bold text-lg">Excellent 4.9/5 Average</span>
-                    <div class="flex text-yellow-400 justify-end text-xl">★★★★★</div>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="p-8 border border-gray-100 rounded-3xl bg-gray-50/50 italic text-gray-700 relative">
-                    <span class="text-6xl text-blue-100 absolute top-4 left-4 font-serif">"</span>
-                    <p class="relative z-10">"The Physics simulations made electricity so much easier to understand. I went from 55% to 82% in my last term!"</p>
-                    <div class="mt-8 not-italic flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold">G</div>
-                        <div class="text-sm font-bold text-blue-900">Grade 12 Student <br><span class="text-gray-400 font-normal">Gauteng</span></div>
-                    </div>
-                </div>
-                <div class="p-8 border border-gray-100 rounded-3xl bg-gray-50/50 italic text-gray-700 relative">
-                    <span class="text-6xl text-blue-100 absolute top-4 left-4 font-serif">"</span>
-                    <p class="relative z-10">"Finally, a tutor who explains Maths step-by-step. The CAPS alignment is perfect for my final exam prep."</p>
-                    <div class="mt-8 not-italic flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold">M</div>
-                        <div class="text-sm font-bold text-blue-900">Grade 11 Parent <br><span class="text-gray-400 font-normal">Cape Town</span></div>
-                    </div>
-                </div>
-                <div class="p-8 border border-gray-100 rounded-3xl bg-gray-50/50 italic text-gray-700 relative">
-                    <span class="text-6xl text-blue-100 absolute top-4 left-4 font-serif">"</span>
-                    <p class="relative z-10">"The WhatsApp group is a lifesaver for reminders and extra notes. It feels like a real community."</p>
-                    <div class="mt-8 not-italic flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold">S</div>
-                        <div class="text-sm font-bold text-blue-900">Grade 10 Student <br><span class="text-gray-400 font-normal">KZN</span></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
     <section id="pricing" class="py-20 px-6 max-w-6xl mx-auto">
         <div class="bg-blue-900 rounded-[3rem] p-8 md:p-16 text-white relative overflow-hidden shadow-2xl shadow-blue-900/50">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-extrabold">Transparent Monthly Fees</h2>
-                <p class="text-blue-200 mt-4">Simple, affordable, and high-quality tutoring for every student.</p>
+                <h2 class="text-4xl font-extrabold tracking-tight">2026 Transparent Fees</h2>
+                <p class="text-blue-200 mt-4 max-w-lg mx-auto italic">Invest in excellence with our simple, discounted monthly subscription plans.</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white/10 backdrop-blur-md p-10 rounded-3xl border border-white/20 flex flex-col justify-between">
+                <div class="bg-white/10 backdrop-blur-md p-10 rounded-[2.5rem] border border-white/20 flex flex-col justify-between">
                     <div>
-                        <h4 class="text-xl font-semibold">Single Subject</h4>
-                        <div class="text-5xl font-extrabold my-6">R380<span class="text-lg font-normal text-blue-300">/pm</span></div>
-                        <ul class="text-blue-100 space-y-4 mb-8">
-                            <li class="flex items-center">✅ <span class="ml-2">Maths OR Physics</span></li>
-                            <li class="flex items-center">✅ <span class="ml-2">2 Live Sessions Weekly</span></li>
-                            <li class="flex items-center">✅ <span class="ml-2">Study Notes Included</span></li>
+                        <div class="flex justify-between items-start mb-6">
+                            <h4 class="text-xl font-bold">Single Subject</h4>
+                            <span class="text-[10px] bg-white/20 px-3 py-1 rounded-full uppercase font-black">Maths or Physics</span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mb-6">
+                            <span class="text-5xl font-black">R500</span>
+                            <span class="text-blue-300 line-through text-lg">R600</span>
+                            <span class="text-blue-200 text-sm">/pm</span>
+                        </div>
+                        <ul class="text-blue-100 space-y-4 mb-8 text-sm">
+                            <li class="flex items-center">✅ <span class="ml-3 italic font-semibold">8 Live Sessions Monthly</span></li>
+                            <li class="flex items-center">✅ <span class="ml-3">Personalized Study Notes</span></li>
+                            <li class="flex items-center">✅ <span class="ml-3">WhatsApp Group Access</span></li>
                         </ul>
                     </div>
-                    <a href="{% url 'register' %}" class="block w-full py-4 bg-white text-blue-900 text-center font-bold rounded-2xl hover:bg-blue-50 transition">Select Single</a>
+                    <a href="{% url 'register' %}" class="block w-full py-4 bg-white text-blue-900 text-center font-black rounded-2xl hover:bg-blue-50 transition shadow-lg">Start with One</a>
                 </div>
 
-                <div class="bg-blue-600 p-10 rounded-3xl border-2 border-blue-400 relative shadow-2xl flex flex-col justify-between">
-                    <div class="absolute top-0 right-10 -translate-y-1/2 bg-yellow-400 text-blue-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">Best Value</div>
+                <div class="bg-blue-600 p-10 rounded-[2.5rem] border-2 border-blue-400 relative shadow-2xl flex flex-col justify-between">
+                    <div class="absolute top-0 right-10 -translate-y-1/2 bg-yellow-400 text-blue-900 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest shadow-xl">Top Value</div>
                     <div>
-                        <h4 class="text-xl font-semibold">Combo Deal</h4>
-                        <div class="text-5xl font-extrabold my-6">R700<span class="text-lg font-normal text-blue-200">/pm</span></div>
-                        <ul class="text-blue-50 space-y-4 mb-8">
-                            <li class="flex items-center">✅ <span class="ml-2">BOTH Maths & Physics</span></li>
-                            <li class="flex items-center">✅ <span class="ml-2">4 Live Sessions Weekly</span></li>
-                            <li class="flex items-center">✅ <span class="ml-2">Full Master-Notes Pack</span></li>
+                        <div class="flex justify-between items-start mb-6">
+                            <h4 class="text-xl font-bold">Combo Master</h4>
+                            <span class="text-[10px] bg-blue-700 px-3 py-1 rounded-full uppercase font-black">Maths + Physics</span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mb-6">
+                            <span class="text-5xl font-black">R800</span>
+                            <span class="text-blue-300 line-through text-lg font-normal">R1200</span>
+                            <span class="text-blue-100 text-sm">/pm</span>
+                        </div>
+                        <ul class="text-blue-50 space-y-4 mb-8 text-sm">
+                            <li class="flex items-center">✅ <span class="ml-3 italic font-semibold">16 Live Sessions Monthly</span></li>
+                            <li class="flex items-center">✅ <span class="ml-3 font-bold">Save R400 every month</span></li>
+                            <li class="flex items-center">✅ <span class="ml-3">Priority WhatsApp Support</span></li>
                         </ul>
                     </div>
-                    <a href="{% url 'register' %}" class="block w-full py-4 bg-yellow-400 text-blue-900 text-center font-bold rounded-2xl hover:bg-yellow-300 transition transform hover:scale-105">Get Both & Save R60</a>
+                    <a href="{% url 'register' %}" class="block w-full py-4 bg-yellow-400 text-blue-900 text-center font-black rounded-2xl hover:bg-yellow-300 transition transform hover:scale-[1.02] shadow-xl">Secure Combo & Save</a>
                 </div>
             </div>
         </div>
