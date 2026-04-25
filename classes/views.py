@@ -104,3 +104,6 @@ def payment_success(request):
     profile.save()
     
     return redirect('dashboard')
+def tutor_profiles(request):
+    """Page displaying the expert tutors."""
+    return render(request, 'classes/tutors.html')
