@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,7 @@
         <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
             
             <a href="/" class="flex items-center">
-                <img src="/static/logo.png" alt="MyTutor CAPS Logo" class="h-10 md:h-12 w-auto object-contain">
+                <img src="{% static 'images/logo.png' %}" alt="MyTutor CAPS Logo" class="h-10 md:h-12 w-auto object-contain">
             </a>
 
             <div class="flex items-center space-x-4 md:space-x-8">
@@ -61,79 +62,6 @@
                 <a href="#pricing" class="bg-white border-2 border-gray-200 text-gray-700 px-10 py-4 rounded-2xl text-lg font-bold hover:bg-gray-50 transition">
                     View Fee Structure
                 </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-20 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
-        <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">📖</div>
-            <h3 class="text-xl font-bold text-blue-900">Full CAPS Coverage</h3>
-            <p class="text-gray-500 mt-3 leading-relaxed">We strictly follow the South African curriculum requirements to ensure 100% exam readiness.</p>
-        </div>
-        <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">🔬</div>
-            <h3 class="text-xl font-bold text-blue-900">8 Sessions Monthly</h3>
-            <p class="text-gray-500 mt-3 leading-relaxed">Consistent, high-frequency learning with 2 sessions every week per subject to build mastery.</p>
-        </div>
-        <div class="group p-8 rounded-3xl hover:bg-blue-50 transition duration-300">
-            <div class="text-4xl mb-6 bg-white w-16 h-16 flex items-center justify-center rounded-2xl shadow-sm mx-auto md:mx-0">🎥</div>
-            <h3 class="text-xl font-bold text-blue-900">Live Interaction</h3>
-            <p class="text-gray-500 mt-3 leading-relaxed">Real-time sessions via MS Teams. Not just a video—a live classroom where students ask questions.</p>
-        </div>
-    </section>
-
-    <section id="pricing" class="py-20 px-6 max-w-6xl mx-auto">
-        <div class="bg-blue-900 rounded-[3rem] p-8 md:p-16 text-white relative overflow-hidden shadow-2xl shadow-blue-900/50">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-extrabold tracking-tight">2026 Transparent Fees</h2>
-                <p class="text-blue-200 mt-4 max-w-lg mx-auto italic">Invest in excellence with our simple, discounted monthly subscription plans.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white/10 backdrop-blur-md p-10 rounded-[2.5rem] border border-white/20 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-6">
-                            <h4 class="text-xl font-bold">Single Subject</h4>
-                            <span class="text-[10px] bg-white/20 px-3 py-1 rounded-full uppercase font-black">Maths or Physics</span>
-                        </div>
-                        <div class="flex items-baseline gap-2 mb-6">
-                            <span class="text-5xl font-black">R500</span>
-                            <span class="text-blue-300 line-through text-lg">R600</span>
-                            <span class="text-blue-200 text-sm">/pm</span>
-                        </div>
-                        <ul class="text-blue-100 space-y-4 mb-8 text-sm">
-                            <li class="flex items-center">✅ <span class="ml-3 italic font-semibold">8 Live Sessions Monthly</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Personalized Study Notes</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Live Microsoft teams Access</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Priority WhatsApp Support</span></li>
-                        </ul>
-                    </div>
-                    <a href="{% url 'register' %}" class="block w-full py-4 bg-white text-blue-900 text-center font-black rounded-2xl hover:bg-blue-50 transition shadow-lg">Start with One</a>
-                </div>
-
-                <div class="bg-blue-600 p-10 rounded-[2.5rem] border-2 border-blue-400 relative shadow-2xl flex flex-col justify-between">
-                    <div class="absolute top-0 right-10 -translate-y-1/2 bg-yellow-400 text-blue-900 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest shadow-xl">Top Value</div>
-                    <div>
-                        <div class="flex justify-between items-start mb-6">
-                            <h4 class="text-xl font-bold">Combo Master</h4>
-                            <span class="text-[10px] bg-blue-700 px-3 py-1 rounded-full uppercase font-black">Maths + Physics</span>
-                        </div>
-                        <div class="flex items-baseline gap-2 mb-6">
-                            <span class="text-5xl font-black">R800</span>
-                            <span class="text-blue-300 line-through text-lg font-normal">R1200</span>
-                            <span class="text-blue-100 text-sm">/pm</span>
-                        </div>
-                        <ul class="text-blue-50 space-y-4 mb-8 text-sm">
-                            <li class="flex items-center">✅ <span class="ml-3 italic font-semibold">16 Live Sessions Monthly</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3 font-bold text-white">Save R400 every month</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Live Microsoft teams Access</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Priority WhatsApp Support</span></li>
-                            <li class="flex items-center">✅ <span class="ml-3">Personalised Study Notes</span></li>
-                        </ul>
-                    </div>
-                    <a href="{% url 'register' %}" class="block w-full py-4 bg-yellow-400 text-blue-900 text-center font-black rounded-2xl hover:bg-yellow-300 transition transform hover:scale-[1.02] shadow-xl">Secure Combo & Save</a>
-                </div>
             </div>
         </div>
     </section>
