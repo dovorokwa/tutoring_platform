@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Subject
+# Make sure ContactMessage is included in this import line!
+from .models import Subject, ContactMessage 
 
 class StudentRegistrationForm(forms.ModelForm):
     # 1. Grade selection dropdown
@@ -18,7 +19,7 @@ class StudentRegistrationForm(forms.ModelForm):
         'placeholder': 'Create a secure password'
     }))
 
-    # 3. Subject selection checkboxes (Generic List)
+    # 3. Subject selection checkboxes
     subjects = forms.ModelMultipleChoiceField(
         queryset=Subject.objects.none(),
         widget=forms.CheckboxSelectMultiple(),
@@ -41,35 +42,26 @@ class StudentRegistrationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
         unique_ids = []
         seen_names = set()
-        
         for subject in Subject.objects.all():
             if subject.name not in seen_names:
                 unique_ids.append(subject.id)
                 seen_names.add(subject.name)
-        
         self.fields['subjects'].queryset = Subject.objects.filter(id__in=unique_ids)
         self.fields['subjects'].label_from_instance = lambda obj: f"{obj.get_name_display()}"
 
-    # --- VALIDATION METHODS ---
-
     def clean_username(self):
-        """Checks if the username is already taken."""
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("This username already exists. Please login.")
         return username
 
     def clean_email(self):
-        """Checks if the email is already in use."""
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("An account with this email already exists. Please login.")
         return email
-
-    # --- SAVE METHOD ---
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -77,3 +69,16 @@ class StudentRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+# --- CONTACT FORM (Moved outside and properly indented) ---
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'subject', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Your Name'}),
+            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Email Address'}),
+            'subject': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'How can we help?'}),
+            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Write your message here...', 'rows': 4}),
+        }

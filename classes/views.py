@@ -3,8 +3,10 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.utils import timezone
+from django.contrib import messages  # Added for the contact form success alert
 from .models import Subject, StudentProfile
-from .forms import StudentRegistrationForm
+# Added ContactForm to the imports below
+from .forms import StudentRegistrationForm, ContactForm 
 
 def landing(request):
     """The public landing page."""
@@ -59,7 +61,6 @@ def dashboard(request):
             return redirect('register')
 
         # FIX: Count unique subject types, not the number of database objects
-        # This ensures one subject (e.g. MATH) is always R500 regardless of session count
         unique_count = subjects.values('name').distinct().count()
         
         if unique_count >= 2:
@@ -104,6 +105,19 @@ def payment_success(request):
     profile.save()
     
     return redirect('dashboard')
+
 def tutor_profiles(request):
     """Page displaying the expert tutors."""
     return render(request, 'classes/tutors.html')
+
+def contact_us(request):
+    """Handles the contact form submission."""
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent! We will get back to you shortly.")
+            return redirect('contact_us')
+    else:
+        form = ContactForm()
+    return render(request, 'classes/contact.html', {'form': form})

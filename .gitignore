@@ -11,8 +11,7 @@ __pycache__/
 *$py.class
 
 # Media/Static: Ignore user-uploaded files or collected static
-/static/
-/media/
+
 
 # OS/Editor: System specific files
 .DS_Store
