@@ -1,84 +1,67 @@
 from django import forms
 from django.contrib.auth.models import User
-# Make sure ContactMessage is included in this import line!
-from .models import Subject, ContactMessage 
+from .models import Subject, StudentProfile
 
 class StudentRegistrationForm(forms.ModelForm):
-    # 1. Grade selection dropdown
-    grade = forms.ChoiceField(
-        choices=[('', 'Select Your Grade')] + [(i, f'Grade {i}') for i in range(8, 13)],
-        widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white',
-        }),
-        required=True
+    # Custom fields for Name and Phone
+    first_name = forms.CharField(
+        max_length=30, 
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-input'})
+    )
+    last_name = forms.CharField(
+        max_length=30, 
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Surname', 'class': 'form-input'})
+    )
+    phone_number = forms.CharField(
+        max_length=15, 
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Cell Phone Number', 'class': 'form-input'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Email Address', 'class': 'form-input'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Create Password', 'class': 'form-input'})
     )
 
-    # 2. Password field
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition',
-        'placeholder': 'Create a secure password'
-    }))
-
-    # 3. Subject selection checkboxes
+    grade = forms.ChoiceField(
+        choices=[(i, f"Grade {i}") for i in range(8, 13)],
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
     subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.none(),
-        widget=forms.CheckboxSelectMultiple(),
-        required=True,
+        queryset=Subject.objects.none(), 
+        widget=forms.CheckboxSelectMultiple
     )
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition',
-                'placeholder': 'Choose a username'
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition',
-                'placeholder': 'Enter your email address'
-            }),
-        }
+        fields = ['first_name', 'last_name', 'email', 'password']
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        unique_ids = []
-        seen_names = set()
-        for subject in Subject.objects.all():
-            if subject.name not in seen_names:
-                unique_ids.append(subject.id)
-                seen_names.add(subject.name)
-        self.fields['subjects'].queryset = Subject.objects.filter(id__in=unique_ids)
-        self.fields['subjects'].label_from_instance = lambda obj: f"{obj.get_name_display()}"
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("This username already exists. Please login.")
-        return username
+        super(StudentRegistrationForm, self).__init__(*args, **kwargs)
+        # FIX: SQLite-friendly way to get unique subject names
+        # We fetch all subjects, but in the view logic we map them to the specific grade
+        self.fields['subjects'].queryset = Subject.objects.all().order_by('name')
 
     def clean_email(self):
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get('email').lower()
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("An account with this email already exists. Please login.")
+            raise forms.ValidationError("A user with this email already exists.")
         return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
+        # Email becomes the username
+        user.username = self.cleaned_data['email']
+        user.set_password(self.cleaned_data['password'])
+        
+        # Inactive until email verification
+        user.is_active = False 
+        
         if commit:
             user.save()
         return user
-
-# --- CONTACT FORM (Moved outside and properly indented) ---
-
-class ContactForm(forms.ModelForm):
-    class Meta:
-        model = ContactMessage
-        fields = ['name', 'email', 'subject', 'message']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Your Name'}),
-            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Email Address'}),
-            'subject': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'How can we help?'}),
-            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Write your message here...', 'rows': 4}),
-        }
