@@ -50,13 +50,8 @@
                 <p class="text-blue-900/60 uppercase font-black text-[10px] tracking-[0.2em] mb-3 italic">Monthly Subscription Fee</p>
                 
                 <div class="flex items-center justify-center gap-4">
-                    <span class="text-2xl text-gray-400 line-through font-bold">
-                        R{{ original_price }}
-                    </span>
-                    
-                    <span class="text-6xl font-black text-blue-900 tracking-tighter">
-                        R{{ price }}
-                    </span>
+                    <span class="text-2xl text-gray-400 line-through font-bold">R{{ original_price }}</span>
+                    <span class="text-6xl font-black text-blue-900 tracking-tighter">R{{ price }}</span>
                 </div>
                 
                 <div class="mt-5 inline-flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-widest animate-pulse">
@@ -78,18 +73,27 @@
 
     <script>
         function payWithPaystack() {
-            // FIXED: Ensure PaystackPop is initialized correctly
+            // Check if the key was actually passed from Django
+            const publicKey = '{{ PAYSTACK_PUBLIC_KEY }}';
+            
+            if (!publicKey || publicKey === '') {
+                console.error("Paystack Public Key is missing!");
+                alert("Technical Error: Payment gateway key is not configured.");
+                return;
+            }
+
             let handler = PaystackPop.setup({
-                key: '{{ PAYSTACK_PUBLIC_KEY }}', 
+                key: publicKey, 
                 email: '{{ user.email }}',
-                amount: {{ price }} * 100, 
+                // Paystack expects amount in Kobo (cents)
+                amount: parseFloat('{{ price }}') * 100, 
                 currency: 'ZAR',
                 ref: 'MT-{{ user.id }}-' + Math.floor((Math.random() * 1000000) + 1),
                 callback: function(response) {
                     window.location.href = "{% url 'payment_success' %}?ref=" + response.reference;
                 },
                 onClose: function() {
-                    alert('Payment cancelled. Your account will remain locked until the subscription fee is paid.');
+                    alert('Payment window closed.');
                 }
             });
             handler.openIframe();
