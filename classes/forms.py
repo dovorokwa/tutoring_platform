@@ -1,40 +1,21 @@
+# /root/tutoring_platform/classes/forms.py
 from django import forms
 from django.contrib.auth.models import User
 from .models import Subject, StudentProfile
 
 class StudentRegistrationForm(forms.ModelForm):
-    # Custom fields for Name and Phone
-    first_name = forms.CharField(
-        max_length=30, 
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-input'})
-    )
-    last_name = forms.CharField(
-        max_length=30, 
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Surname', 'class': 'form-input'})
-    )
-    phone_number = forms.CharField(
-        max_length=15, 
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Cell Phone Number', 'class': 'form-input'})
-    )
-    email = forms.EmailField(
-        required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'Email Address', 'class': 'form-input'})
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Create Password', 'class': 'form-input'})
-    )
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    phone_number = forms.CharField(max_length=15, required=True)
+    email = forms.EmailField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput)
 
-    grade = forms.ChoiceField(
-        choices=[(i, f"Grade {i}") for i in range(8, 13)],
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
+    grade = forms.ChoiceField(choices=[(i, f"Grade {i}") for i in range(8, 13)])
     
-    subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.none(), 
-        widget=forms.CheckboxSelectMultiple
+    # We change this to a MultipleChoiceField so we can manually define choices
+    subjects = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        required=True
     )
 
     class Meta:
@@ -43,9 +24,11 @@ class StudentRegistrationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(StudentRegistrationForm, self).__init__(*args, **kwargs)
-        # FIX: SQLite-friendly way to get unique subject names
-        # We fetch all subjects, but in the view logic we map them to the specific grade
-        self.fields['subjects'].queryset = Subject.objects.all().order_by('name')
+        
+        # Manually create unique choices based on name to avoid .distinct() errors
+        all_subjects = Subject.objects.all()
+        unique_names = sorted(list(set(s.name for s in all_subjects)))
+        self.fields['subjects'].choices = [(name, name) for name in unique_names]
 
     def clean_email(self):
         email = self.cleaned_data.get('email').lower()
@@ -55,13 +38,9 @@ class StudentRegistrationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        # Email becomes the username
         user.username = self.cleaned_data['email']
         user.set_password(self.cleaned_data['password'])
-        
-        # Inactive until email verification
         user.is_active = False 
-        
         if commit:
             user.save()
         return user
